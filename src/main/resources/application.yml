@@ -1,0 +1,26 @@
+# DATASOURCE
+
+spring:
+  application:
+    name: Client API - Backend
+    version: v1.0.0
+    since: 12/06/2023
+    author: Felipe Lima
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost/assertiva     #Conexão local
+#    url: jdbc:postgresql://postgres-assertiva/assertiva
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+#      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
