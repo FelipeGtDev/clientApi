@@ -21,4 +21,10 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     @Query(value = "SELECT c.* FROM client c WHERE lower(c.name) LIKE lower(concat('%', :name,'%')) ", nativeQuery = true)
     Page<Client> listByName(Pageable page, String name);
+
+    @Query(value = "SELECT * FROM client c WHERE c.id = :id", nativeQuery = true)
+    Client findById(long id);
+
+    @Query(value = "DELETE FROM client c WHERE c.id = :id", nativeQuery = true)
+    void deleteById(long id);
 }

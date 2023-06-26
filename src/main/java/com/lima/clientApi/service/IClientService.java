@@ -15,4 +15,8 @@ public interface IClientService {
     Page<ClientDTO> listByAreaCode(Pageable page, String areaCode);
 
     Page<ClientDTO> listByName(Pageable page, String name);
+
+    Optional<ClientDTO> findById(Long id);
+
+    void deleteById(Long id);
 }

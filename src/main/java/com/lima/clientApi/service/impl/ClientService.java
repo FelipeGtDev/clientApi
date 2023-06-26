@@ -1,5 +1,6 @@
 package com.lima.clientApi.service.impl;
 
+import com.lima.clientApi.exceptions.ResourceNotFoundException;
 import com.lima.clientApi.model.Client;
 import com.lima.clientApi.model.Email;
 import com.lima.clientApi.model.Phone;
@@ -53,12 +54,30 @@ public class ClientService implements IClientService {
         return clients.map(this::builderClientDto);
     }
 
-     public Page<ClientDTO> listByName(Pageable page, String name) {
-         Page<Client> clients = repository.listByName(page, name);
+    public Page<ClientDTO> listByName(Pageable page, String name) {
+        Page<Client> clients = repository.listByName(page, name);
 
-         return clients.map(this::builderClientDto);
-     }
+        return clients.map(this::builderClientDto);
+    }
 
+    public Optional<ClientDTO> findById(Long id) {
+        Optional<Client> client = repository.findById(id);
+        if (client.isEmpty()) {
+            throw new ResourceNotFoundException("Cliente não encontrado");
+        } else {
+            return client.map(this::builderClientDto);
+        }
+    }
+
+
+    public void deleteById(Long id) {
+        Optional<Client> client = repository.findById(id);
+        if (client.isEmpty()) {
+            throw new ResourceNotFoundException("Cliente não encontrado");
+        } else {
+            repository.deleteById(id);
+        }
+    }
 
     private ClientDTO builderClientDto(Client client) {
         return ClientDTO.builder()

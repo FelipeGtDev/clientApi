@@ -1,6 +1,7 @@
 package com.lima.clientApi.service.impl;
 
 
+import com.lima.clientApi.exceptions.ResourceNotFoundException;
 import com.lima.clientApi.model.Client;
 import com.lima.clientApi.model.Email;
 import com.lima.clientApi.model.Phone;
@@ -44,8 +45,8 @@ class ClientServiceTest {
 
         // Mock do repositório
 
-        Client client = createClient(1L, "123456789","John Doe", 1L, "11", "12345678",
-                2L, "21", "92345678", 1L, "teste@teste.com" );
+        Client client = createClient(1L, "123456789", "John Doe", 1L, "11", "12345678",
+                2L, "21", "92345678", 1L, "teste@teste.com");
 
         when(repository.save(any(Client.class))).thenReturn(client);
 
@@ -78,10 +79,10 @@ class ClientServiceTest {
         // Mock do repositório
         List<Client> clients = new ArrayList<>();
 
-        Client client1 = createClient(1L, "123456789","John Doe", 1L, "11", "12345678",
-                2L, "21", "92345678", 1L, "teste@teste.com" );
-        Client client2 = createClient(2L, "987654321","Jane Smith", 3L, "32", "12345678",
-                4L, "21", "92345678", 2L, "teste@gmail.com" );
+        Client client1 = createClient(1L, "123456789", "John Doe", 1L, "11", "12345678",
+                2L, "21", "92345678", 1L, "teste@teste.com");
+        Client client2 = createClient(2L, "987654321", "Jane Smith", 3L, "32", "12345678",
+                4L, "21", "92345678", 2L, "teste@gmail.com");
 
         clients.add(client1);
         clients.add(client2);
@@ -113,8 +114,8 @@ class ClientServiceTest {
         // Mock do repositório
         List<Client> clients = new ArrayList<>();
 
-        Client client = createClient(2L, "987654321","Jane Smith", 3L, "32", "12345678",
-                4L, "21", "92345678", 2L, "teste@gmail.com" );
+        Client client = createClient(2L, "987654321", "Jane Smith", 3L, "32", "12345678",
+                4L, "21", "92345678", 2L, "teste@gmail.com");
 
         clients.add(client);
         Page<Client> clientPage = new PageImpl<>(clients, pageable, clients.size());
@@ -147,11 +148,11 @@ class ClientServiceTest {
         // Mock do repositório
         List<Client> clients = new ArrayList<>();
 
-        Client client = createClient(2L, "987654321","Jane Smith", 3L, "32", "12345678",
-                4L, "21", "92345678", 2L, "teste@gmail.com" );
+        Client client = createClient(2L, "987654321", "Jane Smith", 3L, "32", "12345678",
+                4L, "21", "92345678", 2L, "teste@gmail.com");
 
-        Client client2 = createClient(2L, "987654321","Janaina Dark", 4L, "21", "12345678",
-                10L, "11", "92345678", 8L, "teste2@gmail.com" );
+        Client client2 = createClient(2L, "987654321", "Janaina Dark", 4L, "21", "12345678",
+                10L, "11", "92345678", 8L, "teste2@gmail.com");
 
         clients.add(client);
         clients.add(client2);
@@ -173,6 +174,76 @@ class ClientServiceTest {
         assertTrue(response.getContent().get(0).getName().toLowerCase().contains(name.toLowerCase()));
         assertTrue(response.getContent().get(1).getName().toLowerCase().contains(name.toLowerCase()));
 
+    }
+
+    @Test
+    void findById_wouldShoudReturnClientById() {
+        // Dados de entrada
+        Long id = 1L;
+
+        // Mock do repositório
+        Client client = createClient(1L, "987654321", "Jane Smith", 3L, "32", "12345678",
+                4L, "21", "92345678", 2L, "teste@gmail.com");
+
+        when(repository.findById(id)).thenReturn(Optional.of(client));
+
+        // Executar o método findById
+        Optional<ClientDTO> response = service.findById(id);
+
+        // Verificações
+        assertTrue(response.isPresent());
+        assertEquals(client.getId(), response.get().getId());
+        assertEquals(client.getName(), response.get().getName());
+        assertEquals(client.getCpf(), response.get().getCpf());
+        assertEquals(client.getPhones().size(), response.get().getPhones().size());
+        assertEquals(client.getEmails().size(), response.get().getEmails().size());
+        assertEquals(client.getPhones().get(0).getDdd(), response.get().getPhones().get(0).getDdd());
+        assertEquals(client.getPhones().get(0).getNumber(), response.get().getPhones().get(0).getNumber());
+        assertEquals(client.getPhones().get(1).getDdd(), response.get().getPhones().get(1).getDdd());
+        assertEquals(client.getPhones().get(1).getNumber(), response.get().getPhones().get(1).getNumber());
+        assertEquals(client.getEmails().get(0).getEmail(), response.get().getEmails().get(0).getEmail());
+    }
+
+    @Test
+    void findById_whoudReturnExceptionWhenClientNotFound() {
+        // Dados de entrada
+        Long id = 1L;
+
+        // Mock do repositório
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        // Executar o método findById
+        assertThrows(ResourceNotFoundException.class, () -> service.deleteById(id));
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> service.deleteById(id));
+        assertTrue(runtimeException.getMessage().contains("Cliente não encontrado"));
+
+    }
+
+    @Test
+    void deleteById_wouldShoudDeleteClientById() {
+        // Dados de entrada
+        Long id = 1L;
+
+        // Mock do repositório
+        Client client = createClient(1L, "987654321", "Jane Smith", 3L, "32", "12345678",
+                4L, "21", "92345678", 2L, "teste@gmail.com");
+
+        when(repository.findById(id)).thenReturn(Optional.of(client));
+        doNothing().when(repository).deleteById(id);
+    }
+
+    @Test
+    void deleteById_whoudReturnExceptionWhenClientNotFound() {
+        // Dados de entrada
+        Long id = 1L;
+
+        // Mock do repositório
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        // Executar o método findById
+        assertThrows(ResourceNotFoundException.class, () -> service.deleteById(id));
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> service.deleteById(id));
+        assertTrue(runtimeException.getMessage().contains("Cliente não encontrado"));
     }
 
 
@@ -198,7 +269,7 @@ class ClientServiceTest {
     }
 
     private Client createClient(Long id, String cpf, String name, Long phoneId1, String ddd1, String number1,
-                                Long phoneId2,String ddd2, String number2, Long emailId,String emailAddress){
+                                Long phoneId2, String ddd2, String number2, Long emailId, String emailAddress) {
         Client client = new Client();
 
         client.setId(id);
