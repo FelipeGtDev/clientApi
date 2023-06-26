@@ -11,13 +11,14 @@ import org.springframework.stereotype.Repository;
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
 
-
-    @Query(value = "SELECT * FROM client c",
-            nativeQuery = true)
+    @Query(value = "SELECT * FROM client c", nativeQuery = true)
     Page<Client> listAll(Pageable page);
 
     @Query(value = "SELECT c.* FROM client c " +
             "JOIN phone p ON c.id = p.client_id " +
             "WHERE p.ddd = :areaCode ", nativeQuery = true)
     Page<Client> listByAreaCode(Pageable page, String areaCode);
+
+    @Query(value = "SELECT c.* FROM client c WHERE lower(c.name) LIKE lower(concat('%', :name,'%')) ", nativeQuery = true)
+    Page<Client> listByName(Pageable page, String name);
 }

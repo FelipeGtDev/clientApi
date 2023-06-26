@@ -60,4 +60,14 @@ public class ClientController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping
+    public ResponseEntity<Page<?>> listByName(
+             @PageableDefault(size = 15, page = 0, direction = Sort.Direction.DESC, sort = {"id"}) Pageable page,
+            @RequestParam String name) {
+
+        Page<ClientDTO> response = service.listByName(page, name);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

@@ -13,4 +13,6 @@ public interface IClientService {
     Page<ClientDTO> listAll(Pageable page);
 
     Page<ClientDTO> listByAreaCode(Pageable page, String areaCode);
+
+    Page<ClientDTO> listByName(Pageable page, String name);
 }

@@ -120,8 +120,6 @@ class ClientServiceTest {
         Page<Client> clientPage = new PageImpl<>(clients, pageable, clients.size());
         when(repository.listByAreaCode(pageable, areaCode)).thenReturn(clientPage);
 
-
-
         // Executar o método listByAreaCode
         Page<ClientDTO> response = service.listByAreaCode(pageable, areaCode);
 
@@ -137,6 +135,43 @@ class ClientServiceTest {
 
 //        assertEquals(areaCode, response.getContent().get(0).getPhones().stream().filter(phone -> phone.getDdd().equals(areaCode)));
         verify(repository, times(1)).listByAreaCode(pageable, areaCode);
+
+    }
+
+    @Test
+    void listByName_ShouldReturnListOfClientsWhitThePartOfNameRequested() {
+        // Dados de entrada
+        Pageable pageable = PageRequest.of(0, 10);
+        String name = "jan";
+
+        // Mock do repositório
+        List<Client> clients = new ArrayList<>();
+
+        Client client = createClient(2L, "987654321","Jane Smith", 3L, "32", "12345678",
+                4L, "21", "92345678", 2L, "teste@gmail.com" );
+
+        Client client2 = createClient(2L, "987654321","Janaina Dark", 4L, "21", "12345678",
+                10L, "11", "92345678", 8L, "teste2@gmail.com" );
+
+        clients.add(client);
+        clients.add(client2);
+        Page<Client> clientPage = new PageImpl<>(clients, pageable, clients.size());
+        when(repository.listByName(pageable, name)).thenReturn(clientPage);
+
+        // Executar o método listByName
+        Page<ClientDTO> response = service.listByName(pageable, name);
+
+        assertEquals(clients.size(), response.getTotalElements());
+        assertEquals(clients.size(), response.getContent().size());
+        assertEquals(client.getId(), response.getContent().get(0).getId());
+        assertEquals(client.getName(), response.getContent().get(0).getName());
+        assertEquals(client.getCpf(), response.getContent().get(0).getCpf());
+
+        assertEquals(client2.getId(), response.getContent().get(1).getId());
+        assertEquals(client2.getName(), response.getContent().get(1).getName());
+        assertEquals(client2.getCpf(), response.getContent().get(1).getCpf());
+        assertTrue(response.getContent().get(0).getName().toLowerCase().contains(name.toLowerCase()));
+        assertTrue(response.getContent().get(1).getName().toLowerCase().contains(name.toLowerCase()));
 
     }
 

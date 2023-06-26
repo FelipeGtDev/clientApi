@@ -53,6 +53,12 @@ public class ClientService implements IClientService {
         return clients.map(this::builderClientDto);
     }
 
+     public Page<ClientDTO> listByName(Pageable page, String name) {
+         Page<Client> clients = repository.listByName(page, name);
+
+         return clients.map(this::builderClientDto);
+     }
+
 
     private ClientDTO builderClientDto(Client client) {
         return ClientDTO.builder()
