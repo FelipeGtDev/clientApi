@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -84,9 +85,9 @@ class ClientServiceTest {
 
         clients.add(client1);
         clients.add(client2);
-//        Page<Client> clientPage = new PageImpl<>(clients, pageable, clients.size());
+        Page<Client> clientPage = new PageImpl<>(clients, pageable, clients.size());
 
-        when(repository.listAll(pageable)).thenReturn(clients);
+        when(repository.listAll(pageable)).thenReturn(clientPage);
 
         // Executar o método listAll
         Page<ClientDTO> response = service.listAll(pageable);
@@ -116,7 +117,8 @@ class ClientServiceTest {
                 4L, "21", "92345678", 2L, "teste@gmail.com" );
 
         clients.add(client);
-        when(repository.listByAreaCode(pageable, areaCode)).thenReturn(clients);
+        Page<Client> clientPage = new PageImpl<>(clients, pageable, clients.size());
+        when(repository.listByAreaCode(pageable, areaCode)).thenReturn(clientPage);
 
 
 

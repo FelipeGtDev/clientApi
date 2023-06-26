@@ -9,7 +9,6 @@ import com.lima.clientApi.model.dto.PhoneDTO;
 import com.lima.clientApi.repository.ClientRepository;
 import com.lima.clientApi.service.IClientService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -41,28 +40,18 @@ public class ClientService implements IClientService {
     }
 
     public Page<ClientDTO> listAll(Pageable page) {
-        List<Client> clients = repository.listAll(page);
-        List<ClientDTO> clientsDTO = new ArrayList<>();
-        for (Client client : clients) {
-            clientsDTO.add(builderClientDto(client));
+        Page<Client> clients = repository.listAll(page);
 
-        }
+        return clients.map(this::builderClientDto);
 
-        return new PageImpl<>(clientsDTO);
     }
 
     @Override
     public Page<ClientDTO> listByAreaCode(Pageable page, String areaCode) {
-        List<Client> clients = repository.listByAreaCode(page, areaCode);
-        List<ClientDTO> clientsDTO = new ArrayList<>();
-        for (Client client : clients) {
-            clientsDTO.add(builderClientDto(client));
-        }
-        return new PageImpl<>(clientsDTO);
+        Page<Client> clients = repository.listByAreaCode(page, areaCode);
 
+        return clients.map(this::builderClientDto);
     }
-
-
 
 
     private ClientDTO builderClientDto(Client client) {
