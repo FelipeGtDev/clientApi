@@ -10,6 +10,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Setter
 @Getter
 @Entity
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Email {
