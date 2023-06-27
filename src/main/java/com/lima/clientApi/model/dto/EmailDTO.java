@@ -7,9 +7,16 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class EmailDTO {
     private Long id;
     private String email;
 
+
+    @Override
+    public String toString() {
+        return "EmailDTO{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

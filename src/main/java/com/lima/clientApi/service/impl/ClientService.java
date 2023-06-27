@@ -9,6 +9,7 @@ import com.lima.clientApi.model.dto.EmailDTO;
 import com.lima.clientApi.model.dto.PhoneDTO;
 import com.lima.clientApi.repository.ClientRepository;
 import com.lima.clientApi.service.IClientService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 
 @Service
+@Slf4j
 public class ClientService implements IClientService {
 
     public ClientRepository repository;
@@ -33,7 +35,7 @@ public class ClientService implements IClientService {
     public Optional<ClientDTO> save(ClientDTO request) {
 
         Client client = convertDtoToClient(request);
-
+        log.info("Start save client: {}", client);
         Optional<Client> optResponse = Optional.of(repository.save(client));
         ClientDTO response = builderClientDto(optResponse.get());
 
@@ -61,8 +63,10 @@ public class ClientService implements IClientService {
     }
 
     public Optional<ClientDTO> findById(Long id) {
+        log.info("Start find client by id: {}", id);
         Optional<Client> client = repository.findById(id);
         if (client.isEmpty()) {
+            log.warn("Client not found: {}", id);
             throw new ResourceNotFoundException("Cliente não encontrado");
         } else {
             return client.map(this::builderClientDto);
@@ -74,9 +78,11 @@ public class ClientService implements IClientService {
         if (client.isEmpty()) {
             throw new ResourceNotFoundException("Cliente não encontrado");
         } else {
+            log.info("Start update client: {}", client);
             Client clientUpdate = convertDtoToClient(request);
             clientUpdate.setId(id);
             repository.save(clientUpdate);
+            log.info("Client updated: {}", clientUpdate);
             return client.map(this::builderClientDto);
         }
     }
@@ -86,10 +92,12 @@ public class ClientService implements IClientService {
             throw new ResourceNotFoundException("Cliente não encontrado");
         } else {
             repository.deleteById(id);
+            log.info("Client deleted: {}", client);
         }
     }
 
     private ClientDTO builderClientDto(Client client) {
+        log.info("Start builderClientDTO: {}", client);
         return ClientDTO.builder()
                 .id(client.getId())
                 .name(client.getName())
@@ -126,6 +134,7 @@ public class ClientService implements IClientService {
 
 
     private Client convertDtoToClient(ClientDTO request) {
+        log.info("Start convertDtoToClient: {}", request);
         Client client = new Client();
         client.setId(request.getId());
         client.setName(request.getName());

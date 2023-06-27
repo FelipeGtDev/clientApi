@@ -10,7 +10,6 @@ import org.hibernate.annotations.OnDeleteAction;
 @Getter
 @Setter
 @Entity
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Phone {
@@ -31,5 +30,23 @@ public class Phone {
         this.ddd = phoneDTO.getDdd();
         this.number = phoneDTO.getNumber();
         this.client = client;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Phone{")
+                .append("id=")
+                .append(id)
+                .append(", ddd='")
+                .append(ddd)
+                .append('\'')
+                .append(", number='")
+                .append(number)
+                .append('\'')
+                .append('}');
+
+        return sb.toString();
     }
 }

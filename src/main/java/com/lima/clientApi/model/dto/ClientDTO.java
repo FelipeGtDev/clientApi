@@ -11,7 +11,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class ClientDTO {
 
     private Long id;
@@ -22,4 +21,14 @@ public class ClientDTO {
     @JsonInclude(Include.NON_NULL)
     private List<EmailDTO> emails;
 
+    @Override
+    public String toString() {
+        return "ClientDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", phones=" + phones +
+                ", emails=" + emails +
+                '}';
+    }
 }

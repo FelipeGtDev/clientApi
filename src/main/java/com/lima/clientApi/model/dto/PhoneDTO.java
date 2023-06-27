@@ -8,9 +8,18 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+
 public class PhoneDTO {
     private Long id;
     private String ddd;
     private String number;
+
+    @Override
+    public String toString() {
+        return "PhoneDTO{" +
+                "id=" + id +
+                ", ddd='" + ddd + '\'' +
+                ", number='" + number + '\'' +
+                '}';
+    }
 }

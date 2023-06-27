@@ -10,7 +10,6 @@ import org.hibernate.annotations.OnDeleteAction;
 @Setter
 @Getter
 @Entity
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Email {
@@ -35,5 +34,20 @@ public class Email {
         this.id = emailDTO.getId();
         this.email = emailDTO.getEmail();
         this.client = client;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("Email{")
+                .append("id=")
+                .append(id)
+                .append(", email='")
+                .append(email)
+                .append('\'')
+                .append('}');
+
+        return stringBuilder.toString();
     }
 }
