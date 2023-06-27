@@ -88,6 +88,23 @@ public class ClientController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody ClientDTO request) {
+        try {
+            Optional<ClientDTO> response = service.update(id, request);
+
+            return new ResponseEntity<>(response.orElse(null), HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Erro ao atualizar cliente: " + e.getMessage()
+                            .replace("java.lang.Exception: ", ""));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Erro ao atualizar cliente: " + e.getMessage()
+                            .replace("java.lang.Exception: ", ""));
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         try {

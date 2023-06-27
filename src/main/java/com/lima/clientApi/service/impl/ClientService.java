@@ -69,7 +69,17 @@ public class ClientService implements IClientService {
         }
     }
 
-
+    public Optional<ClientDTO> update(Long id, ClientDTO request){
+        Optional<Client> client = repository.findById(id);
+        if (client.isEmpty()) {
+            throw new ResourceNotFoundException("Cliente não encontrado");
+        } else {
+            Client clientUpdate = convertDtoToClient(request);
+            clientUpdate.setId(id);
+            repository.save(clientUpdate);
+            return client.map(this::builderClientDto);
+        }
+    }
     public void deleteById(Long id) {
         Optional<Client> client = repository.findById(id);
         if (client.isEmpty()) {

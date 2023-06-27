@@ -19,4 +19,6 @@ public interface IClientService {
     Optional<ClientDTO> findById(Long id);
 
     void deleteById(Long id);
+
+    Optional<ClientDTO> update(Long id, ClientDTO request);
 }

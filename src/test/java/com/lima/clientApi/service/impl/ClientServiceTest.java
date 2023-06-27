@@ -246,6 +246,40 @@ class ClientServiceTest {
         assertTrue(runtimeException.getMessage().contains("Cliente não encontrado"));
     }
 
+    @Test
+    void updateById_ShouldReturnClientUpdated() {
+        // Dados de entrada
+        Long id = 1L;
+        ClientDTO clientDTO = createClientDTO();
+
+        // Mock do repositório
+        Client newClient = createClient(1L, "123456789", "John Doe", 1L, "11", "12345678",
+                2L, "21", "92345678", 1L, "teste@teste.com");
+
+        Client oldClient = createClient(1L, "123456789", "John Doe", 1L, "11", "12345678",
+                2L, "21", "92345678", 1L, "teste@teste.com");
+
+        when(repository.findById(id)).thenReturn(Optional.of(oldClient));
+        when(repository.save(newClient)).thenReturn(newClient);
+
+        // Executar o método updateById
+        Optional<ClientDTO> response = service.update(id, clientDTO);
+
+        // Verificações
+        assertTrue(response.isPresent());
+        assertEquals(newClient.getId(), response.get().getId());
+        assertEquals(newClient.getName(), response.get().getName());
+        assertEquals(newClient.getCpf(), response.get().getCpf());
+        assertEquals(newClient.getPhones().size(), response.get().getPhones().size());
+        assertEquals(newClient.getEmails().size(), response.get().getEmails().size());
+        assertEquals(newClient.getPhones().get(0).getDdd(), response.get().getPhones().get(0).getDdd());
+        assertEquals(newClient.getPhones().get(0).getNumber(), response.get().getPhones().get(0).getNumber());
+        assertEquals(newClient.getPhones().get(1).getDdd(), response.get().getPhones().get(1).getDdd());
+        assertEquals(newClient.getPhones().get(1).getNumber(), response.get().getPhones().get(1).getNumber());
+        assertEquals(newClient.getEmails().get(0).getEmail(), response.get().getEmails().get(0).getEmail());
+
+    }
+
 
     private ClientDTO createClientDTO() {
         return ClientDTO.builder()
