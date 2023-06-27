@@ -8,13 +8,13 @@ spring:
     author: Felipe Lima
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost/assertiva     #Conexão local
+    url: jdbc:postgresql://localhost/client_api_db
 #    url: jdbc:postgresql://postgres-assertiva/assertiva
     username: postgres
     password: postgres
   jpa:
     hibernate:
-#      ddl-auto: create
+      ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

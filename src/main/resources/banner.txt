@@ -1,0 +1,9 @@
+__________________            _____     _______        _____
+__  ____/__  /__(_)_____________  /_    ___    |__________(_)
+_  /    __  /__  /_  _ \_  __ \  __/    __  /| |__  __ \_  /
+/ /___  _  / _  / /  __/  / / / /_      _  ___ |_  /_/ /  /
+\____/  /_/  /_/  \___//_/ /_/\__/______/_/  |_|  .___//_/
+                                 _/_____/      /_/
+Project: ${spring.application.name}
+Version: ${spring.application.version} - ${spring.application.since}
+Author: ${spring.application.author}
