@@ -9,6 +9,7 @@ bin/
 .project
 .settings
 .springBeans
+/logs
 
 ### IntelliJ IDEA ###
 .idea

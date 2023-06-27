@@ -34,8 +34,10 @@ public class ClientController {
 
         try {
             Optional<ClientDTO> response = service.save(request);
+            log.info("Client saved: {}", response.orElse(null));
             return new ResponseEntity<>(response.orElse(null), HttpStatus.CREATED);
         } catch (Exception e) {
+            log.error("Erro ao salvar cliente: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Erro ao salvar cliente: " + e.getMessage()
                             .replace("java.lang.Exception: ", ""));
@@ -79,10 +81,12 @@ public class ClientController {
 
             return new ResponseEntity<>(response.orElse(null), HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
+            log.error("Erro ao buscar cliente: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(e.getMessage()
                             .replace("java.lang.Exception: ", ""));
         } catch (Exception e) {
+            log.error("Erro ao buscar cliente: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(null);
         }
@@ -92,13 +96,15 @@ public class ClientController {
     public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody ClientDTO request) {
         try {
             Optional<ClientDTO> response = service.update(id, request);
-
+            log.info("Client updated: {}", response.orElse(null));
             return new ResponseEntity<>(response.orElse(null), HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
+            log.error("Erro ao atualizar cliente: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Erro ao atualizar cliente: " + e.getMessage()
                             .replace("java.lang.Exception: ", ""));
         } catch (Exception e) {
+            log.error("Erro ao atualizar cliente: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Erro ao atualizar cliente: " + e.getMessage()
                             .replace("java.lang.Exception: ", ""));
@@ -109,12 +115,15 @@ public class ClientController {
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         try {
             service.deleteById(id);
+            log.info("Client deleted: {}", id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
+            log.error("Erro ao deletar cliente: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Erro ao deletar cliente: " + e.getMessage()
                             .replace("java.lang.Exception: ", ""));
         } catch (Exception e) {
+            log.error("Erro ao deletar cliente: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Erro ao deletar cliente: " + e.getMessage()
                             .replace("java.lang.Exception: ", ""));
