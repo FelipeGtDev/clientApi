@@ -1,0 +1,32 @@
+version: '3.3'
+
+services:
+  db:
+    image: postgres:12.3-alpine
+    container_name: postgres-assertiva
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: assertiva
+    ports:
+      - "5433:5432"
+    networks:
+      - database
+  assertiva:
+    image: assertiva
+    container_name: assertiva-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_CACHE_PATH: /tmp/build_cache
+    tty: true
+    ports:
+      - "8080:8080"
+    networks:
+      - database
+    depends_on:
+      - db
+networks:
+  database:
+    driver: bridge
