@@ -26,6 +26,8 @@ public class Client implements Serializable {
     private Long id;
     private String name;
     private String cpf;
+    @OneToOne(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Address address;
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Phone> phones = new ArrayList<>();
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)

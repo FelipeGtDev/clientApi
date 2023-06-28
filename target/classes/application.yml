@@ -8,8 +8,8 @@ spring:
     author: Felipe Lima
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost/client_api_db
-    #    url: jdbc:postgresql://postgres-assertiva/assertiva
+    url: jdbc:postgresql://postgres-assertiva/assertiva
+#    url: jdbc:postgresql://localhost/client_api_db
     username: postgres
     password: postgres
   jpa:

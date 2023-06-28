@@ -2,9 +2,11 @@ package com.lima.clientApi.service.impl;
 
 
 import com.lima.clientApi.exceptions.ResourceNotFoundException;
+import com.lima.clientApi.model.Address;
 import com.lima.clientApi.model.Client;
 import com.lima.clientApi.model.Email;
 import com.lima.clientApi.model.Phone;
+import com.lima.clientApi.model.dto.AddressDTO;
 import com.lima.clientApi.model.dto.ClientDTO;
 import com.lima.clientApi.model.dto.EmailDTO;
 import com.lima.clientApi.model.dto.PhoneDTO;
@@ -26,11 +28,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ClientServiceTest {
+
     @Mock
     private ClientRepository repository;
 
     private ClientService service;
 
+    //Constants
+    private static final Address ADDRESS = new Address(1L, "Rua sucupira", "123", "Casa", "Jardim", "São Paulo", "SP", "12345678", new Client());
 
     @BeforeEach
     void setUp() {
@@ -40,6 +45,9 @@ class ClientServiceTest {
 
     @Test
     void save_ShouldReturnSavedClientDTO() {
+
+
+
         // Dados de entrada
         ClientDTO request = createClientDTO();
 
@@ -67,6 +75,14 @@ class ClientServiceTest {
         assertEquals(client.getEmails().size(), response.get().getEmails().size());
         assertEquals(client.getEmails().get(0).getId(), response.get().getEmails().get(0).getId());
         assertEquals(client.getEmails().get(0).getEmail(), response.get().getEmails().get(0).getEmail());
+        assertEquals(client.getAddress().getCity(), response.get().getAddress().getCity());
+        assertEquals(client.getAddress().getComplement(), response.get().getAddress().getComplement());
+        assertEquals(client.getAddress().getNeighborhood(), response.get().getAddress().getNeighborhood());
+        assertEquals(client.getAddress().getNumber(), response.get().getAddress().getNumber());
+        assertEquals(client.getAddress().getState(), response.get().getAddress().getState());
+        assertEquals(client.getAddress().getStreet(), response.get().getAddress().getStreet());
+        assertEquals(client.getAddress().getZipCode(), response.get().getAddress().getZipCode());
+
 
         verify(repository, times(1)).save(any(Client.class));
     }
@@ -99,9 +115,14 @@ class ClientServiceTest {
         assertEquals(client1.getId(), response.getContent().get(0).getId());
         assertEquals(client1.getName(), response.getContent().get(0).getName());
         assertEquals(client1.getCpf(), response.getContent().get(0).getCpf());
+        assertTrue(response.getContent().get(0).getPhones().size() > 0);
+        assertTrue(response.getContent().get(0).getEmails().size() > 0);
+        assertNotNull(response.getContent().get(0).getAddress());
+
         assertEquals(client2.getId(), response.getContent().get(1).getId());
         assertEquals(client2.getName(), response.getContent().get(1).getName());
         assertEquals(client2.getCpf(), response.getContent().get(1).getCpf());
+        assertNotNull(response.getContent().get(1).getAddress());
         verify(repository, times(1)).listAll(pageable);
     }
 
@@ -299,6 +320,15 @@ class ClientServiceTest {
                                 .id(1L)
                                 .email("teste@teste.com").build()
                 )))
+                .address(AddressDTO.builder()
+                        .id(1L)
+                        .street("Rua sucupira")
+                        .number("123")
+                        .complement("Casa")
+                        .neighborhood("Jardim")
+                        .city("São Paulo")
+                        .state("SP")
+                        .zipCode("12345678").build())
                 .build();
     }
 
@@ -312,6 +342,8 @@ class ClientServiceTest {
         client.getPhones().add(new Phone(phoneId1, ddd1, number1, client));
         client.getPhones().add(new Phone(phoneId2, ddd2, number2, client));
         client.getEmails().add(new Email(emailId, emailAddress));
+        client.setAddress(ADDRESS);
+        client.getAddress().setClient(client);
 
         return client;
     }

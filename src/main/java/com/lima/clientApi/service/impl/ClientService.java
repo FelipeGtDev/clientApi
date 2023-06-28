@@ -1,9 +1,11 @@
 package com.lima.clientApi.service.impl;
 
 import com.lima.clientApi.exceptions.ResourceNotFoundException;
+import com.lima.clientApi.model.Address;
 import com.lima.clientApi.model.Client;
 import com.lima.clientApi.model.Email;
 import com.lima.clientApi.model.Phone;
+import com.lima.clientApi.model.dto.AddressDTO;
 import com.lima.clientApi.model.dto.ClientDTO;
 import com.lima.clientApi.model.dto.EmailDTO;
 import com.lima.clientApi.model.dto.PhoneDTO;
@@ -104,6 +106,20 @@ public class ClientService implements IClientService {
                 .cpf(client.getCpf())
                 .phones(builderPhoneDto(client.getPhones()))
                 .emails(builderEmailDto(client.getEmails()))
+                .address(builderAddressDto(client.getAddress()))
+                .build();
+    }
+
+    private AddressDTO builderAddressDto(Address address) {
+        return AddressDTO.builder()
+                .id(address.getId())
+                .street(address.getStreet())
+                .number(address.getNumber())
+                .complement(address.getComplement())
+                .neighborhood(address.getNeighborhood())
+                .city(address.getCity())
+                .state(address.getState())
+                .zipCode(address.getZipCode())
                 .build();
     }
 
@@ -141,6 +157,7 @@ public class ClientService implements IClientService {
         client.setCpf(request.getCpf());
         request.getPhones().forEach(phone -> client.getPhones().add(new Phone(phone, client)));
         request.getEmails().forEach(email -> client.getEmails().add(new Email(email, client)));
+        client.setAddress(new Address(request.getAddress(), client));
         return client;
     }
 }

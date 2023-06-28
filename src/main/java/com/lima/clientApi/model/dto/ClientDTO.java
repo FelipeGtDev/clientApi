@@ -20,6 +20,7 @@ public class ClientDTO {
     private List<PhoneDTO> phones;
     @JsonInclude(Include.NON_NULL)
     private List<EmailDTO> emails;
+    private AddressDTO address;
 
     @Override
     public String toString() {
@@ -29,6 +30,7 @@ public class ClientDTO {
                 ", cpf='" + cpf + '\'' +
                 ", phones=" + phones +
                 ", emails=" + emails +
+                ", address=" + address +
                 '}';
     }
 }
